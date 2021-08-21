@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Threading;
 
 namespace HillClimberProjects
 {
@@ -8,7 +9,6 @@ namespace HillClimberProjects
     {
         static string GenerateString(int length)
         {
-            Random random = new Random();
             string returnString = "";
             for (int i = 0; i < length; i++)
             {
@@ -19,7 +19,6 @@ namespace HillClimberProjects
 
         static string MutateString(string current)
         {
-            Random random = new Random();
             int mutateIndex = random.Next(0, current.Length);
             int changeValue = random.Next(0, 2);
             if (current[mutateIndex] == 126)
@@ -62,10 +61,10 @@ namespace HillClimberProjects
             return currentError;
         }
 
+        static Random random = new Random();
         static (float, float) MutateLine(Point[] points, (float, float) currentLine)
         {
             float currentError = CalculateError(points, currentLine);
-            Random random = new Random();
             int whatToChange;
             (float, float) nextLine;
             do
@@ -93,6 +92,11 @@ namespace HillClimberProjects
                 line = MutateLine(points, line);
             }
             return line;
+        }
+
+        static double ErrorFunction(double input1, double input2)
+        {
+            return (input1 - input2) * (input1 - input2);
         }
 
         static void Main(string[] args)
@@ -127,14 +131,84 @@ namespace HillClimberProjects
             //    new Point(-4, -5),
             //};
 
-            Point[] points = new Point[]
+            //Point[] points = new Point[]
+            //{
+            //    new Point(3,3),
+            //    new Point(-3,3),
+            //    new Point(-10, -20),
+            //};
+
+            //var bestLine = FindBestLine(points);
+            //{.75, -1.25}, .5
+            //Perceptron perceptron = new Perceptron(new double[] { .6, -1.4 }, .5, ErrorFunction);
+            //double[][] inputs = new double[][]
+            //{
+            //     new double[] {0, 0},
+            //     new double[] {0.3, -0.7},
+            //     new double[] {1, 1},
+            //     new double[] {-1, -1},
+            //     new double[] {-0.5, 0.5},
+            //};
+            //double[] expected = new double[]
+            //{
+            //    0.5, 
+            //    1.6, 
+            //    0, 
+            //    1,
+            //    -0.5
+            //};
+            //double currentError = 0;
+            //do
+            //{
+            //    currentError = perceptron.Train(inputs, expected, perceptron.GetError(inputs, expected), random);
+            //    Console.SetCursorPosition(0, 0);
+            //    Console.WriteLine($"{currentError}");
+            //    var actual = perceptron.Compute(inputs);
+            //    for (int x = 0; x < actual.Length; x++)
+            //    {
+            //        Console.WriteLine($"Value: {x + 1}");
+            //        Console.WriteLine($"\tActual: {actual[x]}");
+            //        Console.WriteLine($"\tExpected: {expected[x]}");
+            //    }
+            //    Thread.Sleep(10);
+            //}
+            //while (currentError > .0001);
+            //var result = perceptron.Compute(inputs);
+
+            Perceptron line = new Perceptron(2, random, ErrorFunction, .01);
+
+            double[][] inputs = new double[][]
             {
-                new Point(3,3),
-                new Point(-3,3),
-                new Point(-10, -20),
+                new double[]{0,0},
+                new double[]{0,1},
+                new double[]{1,0},
+                new double[]{1,1},
             };
 
-            var bestLine = FindBestLine(points);
+            double[] expected = new double[]
+            {
+                0,
+                0,
+                0,
+                1,
+            };
+
+            double currentError = line.GetError(inputs, expected);
+            while (true)
+            {
+                currentError = line.Train(inputs, expected, currentError, random);
+                Console.SetCursorPosition(0, 0);
+                Console.WriteLine($"{currentError}");
+                double[] actual = line.Compute(inputs);
+                for (int i = 0; i < actual.Length; i++)
+                {
+                    Console.WriteLine($"Index: {i}");
+                    Console.WriteLine($"\tValue: {actual[i]}");
+                    Console.WriteLine($"\tExpected: {expected[i]}");
+                }
+                Console.WriteLine($"Bias: {line.bias}");
+                //Thread.Sleep(10);
+            }
         }
     }
 }
