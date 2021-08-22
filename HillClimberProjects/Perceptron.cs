@@ -6,7 +6,7 @@ namespace HillClimberProjects
 {
     public class Perceptron
     {
-        double[] weights;
+        public double[] weights;
         public double bias;
         double mutationRate;
         Func<double, double, double> errorFunction;
@@ -22,7 +22,7 @@ namespace HillClimberProjects
         public Perceptron(int amountOfInputs, Random random, Func<double, double, double> errorFunction, double mutationRate)
             : this(new double[amountOfInputs], 0, errorFunction, mutationRate)
         {
-            Randomize(random, 0, 10);
+            Randomize(random, 0, 5);
         }
 
 

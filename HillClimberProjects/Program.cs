@@ -175,22 +175,55 @@ namespace HillClimberProjects
             //while (currentError > .0001);
             //var result = perceptron.Compute(inputs);
 
-            Perceptron line = new Perceptron(2, random, ErrorFunction, .01);
+            //Perceptron line = new Perceptron(3, random, ErrorFunction, .01);
 
+            //double[][] inputs = new double[][]
+            //{
+            //    new double[]{0,0,0},
+            //    new double[]{0,0,1},
+            //    new double[]{0,1,0},
+            //    new double[]{0,1,1},
+
+            //    new double[]{1,0,0},
+            //    new double[]{1,0,1},
+            //    new double[]{1,1,0},
+            //    new double[]{1,1,1},
+            //};
+
+            //double[] expected = new double[]
+            //{
+            //    0,
+            //    0,
+            //    0,
+            //    1,
+
+            //    0,
+            //    1,
+            //    1,
+            //    1,
+            //};
+
+            Perceptron line = new Perceptron(2, random, ErrorFunction, .01);
             double[][] inputs = new double[][]
             {
-                new double[]{0,0},
-                new double[]{0,1},
-                new double[]{1,0},
-                new double[]{1,1},
+                new double[] { 1, 4},
+                new double[] { 3, 5},
+                new double[] { 3.5, 3},
+                new double[] { 4, 1.5},
+
+                new double[] { 2, 2},
+                new double[] { 2, 1},
             };
 
             double[] expected = new double[]
             {
-                0,
-                0,
-                0,
                 1,
+                1,
+                1,
+                1,
+
+                0,
+                0,
             };
 
             double currentError = line.GetError(inputs, expected);
@@ -207,6 +240,10 @@ namespace HillClimberProjects
                     Console.WriteLine($"\tExpected: {expected[i]}");
                 }
                 Console.WriteLine($"Bias: {line.bias}");
+                foreach(double weight in line.weights)
+                {
+                    Console.WriteLine($"Weight: {weight}");
+                }
                 //Thread.Sleep(10);
             }
         }
